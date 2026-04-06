@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Alkira SWAG Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0D1B2E;--ink-soft:#4A5568;--ink-muted:#8A94A6;
+  --blue:#1A6FD4;--blue-dim:#EBF2FC;--blue-mid:#C2D9F5;
+  --surface:#F7F8FC;--border:#E4E8F0;--border-hi:#C8D0DF;
+  --green:#0F7A50;--green-bg:#E8F5EF;
+  --amber:#946200;--amber-bg:#FEF6E4;
+  --red:#C0392B;
+  --font:'Plus Jakarta Sans',sans-serif;--serif:'Fraunces',Georgia,serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --rsm:8px;--rmd:12px;--rlg:16px;--rxl:24px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--surface);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* NAV */
+nav{background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-icon{width:34px;height:34px;background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:18px;height:18px}
+.brand-text{display:flex;flex-direction:column;line-height:1}
+.brand-name{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.brand-sub{font-size:10px;font-weight:600;color:var(--blue);letter-spacing:1.4px;text-transform:uppercase;margin-top:2px}
+.nav-center{flex:1;max-width:340px}
+.srch{position:relative}
+.srch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink-muted);pointer-events:none}
+.srch input{width:100%;height:38px;border:1px solid var(--border);border-radius:var(--rmd);padding:0 14px 0 36px;font-family:var(--font);font-size:13.5px;color:var(--ink);background:var(--surface);outline:none;transition:.15s var(--ease)}
+.srch input::placeholder{color:var(--ink-muted)}
+.srch input:focus{border-color:var(--blue);background:white;box-shadow:0 0 0 3px rgba(26,111,212,.1)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.icon-btn{width:38px;height:38px;border:1px solid var(--border);border-radius:var(--rmd);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);transition:.15s var(--ease)}
+.icon-btn:hover{border-color:var(--border-hi);color:var(--ink)}
+.cart-btn{height:38px;background:var(--ink);color:white;border:none;border-radius:var(--rmd);padding:0 16px;font-family:var(--font);font-size:13.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.15s var(--ease)}
+.cart-btn:hover{background:var(--blue)}
+.cpill{background:#E84040;color:white;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.cpill.hide{display:none}
+
+/* HERO */
+.hero{background:var(--ink);color:white;padding:5rem 2rem 4.5rem;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:600px;height:280px;background:radial-gradient(ellipse,rgba(26,111,212,.4) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:600px;margin:0 auto;position:relative}
+.hero-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:5px 14px 5px 10px;font-size:12px;font-weight:500;color:rgba(255,255,255,.65);margin-bottom:2rem}
+.chip-dot{width:6px;height:6px;background:#34D470;border-radius:50%}
+.hero h1{font-family:var(--serif);font-size:clamp(2.4rem,5.5vw,3.6rem);font-weight:300;line-height:1.1;letter-spacing:-.5px;margin-bottom:1.25rem}
+.hero h1 em{font-style:italic;color:rgba(255,255,255,.4)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.5);max-width:400px;margin:0 auto}
+
+/* SHOP */
+.shop{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 4rem}
+.filter-bar{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem}
+.tabs{display:flex;gap:3px;background:white;border:1px solid var(--border);border-radius:var(--rmd);padding:3px}
+.tab{padding:8px 18px;border-radius:var(--rsm);border:none;background:transparent;font-family:var(--font);font-size:13px;font-weight:500;color:var(--ink-soft);cursor:pointer;transition:.15s var(--ease);display:flex;align-items:center;gap:7px;white-space:nowrap}
+.tab:hover{color:var(--ink);background:var(--surface)}
+.tab.on{background:var(--ink);color:white}
+.tn{font-size:10.5px;padding:1px 6px;border-radius:8px;font-weight:700;background:rgba(255,255,255,.18)}
+.tab:not(.on) .tn{background:var(--surface);color:var(--ink-muted)}
+.sec-title{font-size:21px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.sec-desc{font-size:13px;color:var(--ink-muted);margin-top:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
+
+/* CARD */
+.pc{background:white;border:1px solid var(--border);border-radius:var(--rlg);overflow:hidden;display:flex;flex-direction:column;transition:.18s var(--ease)}
+.pc:hover{box-shadow:0 8px 32px rgba(13,27,46,.09);transform:translateY(-2px);border-color:var(--blue-mid)}
+.pc-vis{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative;overflow:hidden}
+.pc-vis.hq{background:linear-gradient(135deg,#EBF3FF,#F2F7FF)}
+.pc-vis.vendor{background:linear-gradient(135deg,#F4F5FA,#ECEEF5)}
+.pc-vis img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.pc-badge{position:absolute;top:10px;left:10px;font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:100px;display:flex;align-items:center;gap:5px}
+.pc-badge.hq{background:var(--green-bg);color:var(--green)}
+.pc-badge.vendor{background:var(--amber-bg);color:var(--amber)}
+.bdot{width:5px;height:5px;border-radius:50%}
+.pc-badge.hq .bdot{background:var(--green)}
+.pc-badge.vendor .bdot{background:var(--amber)}
+.pc-body{padding:1.2rem;flex:1;display:flex;flex-direction:column}
+.pc-cat{font-size:10.5px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.9px;margin-bottom:5px}
+.pc-name{font-size:15px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:6px}
+.pc-desc{font-size:13px;color:var(--ink-soft);line-height:1.6;flex:1;margin-bottom:12px}
+.vn{font-size:11.5px;color:var(--amber);font-weight:600;margin-top:5px}
+
+/* SIZE PICKER */
+.size-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.size-label{font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.7px;width:100%;margin-bottom:3px}
+.size-chip{border:1px solid var(--border);border-radius:6px;padding:5px 11px;font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;background:white;transition:.13s var(--ease);font-family:var(--font)}
+.size-chip:hover{border-color:var(--ink);color:var(--ink)}
+.size-chip.sel{background:var(--ink);color:white;border-color:var(--ink)}
+
+.pc-foot{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.pc-price{font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.4px}
+.pc-price span{font-size:12px;font-weight:400;color:var(--ink-muted)}
+.add-btn{background:var(--ink);color:white;border:none;border-radius:var(--rsm);padding:9px 14px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:.15s var(--ease);display:flex;align-items:center;gap:6px}
+.add-btn:hover:not(:disabled){background:var(--blue)}
+.add-btn:disabled{opacity:.35;cursor:not-allowed}
+.qctrl{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--rsm);overflow:hidden}
+.qb{width:33px;height:35px;border:none;background:var(--surface);color:var(--ink);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qb:hover{background:var(--border)}
+.qv{width:33px;height:35px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--ink);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.no-res{grid-column:1/-1;text-align:center;padding:5rem;color:var(--ink-muted)}
+.no-res p:first-child{font-size:36px;margin-bottom:.75rem}
+
+/* PANELS */
+.overlay{display:none;position:fixed;inset:0;background:rgba(13,27,46,.45);z-index:200;backdrop-filter:blur(2px)}
+.overlay.on{display:block}
+.sp{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:100vw;background:white;z-index:201;display:flex;flex-direction:column;transform:translateX(100%);transition:.26s var(--ease);box-shadow:-8px 0 48px rgba(13,27,46,.12)}
+.sp.on{transform:translateX(0)}
+.sp-head{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0}
+.sp-head-t{font-size:17px;font-weight:700;color:var(--ink)}
+.sp-head-s{font-size:13px;color:var(--ink-muted);margin-top:2px}
+.xb{width:33px;height:33px;background:var(--surface);border:1px solid var(--border);border-radius:50%;cursor:pointer;font-size:17px;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;transition:.15s var(--ease)}
+.xb:hover{background:var(--border)}
+.sp-body{flex:1;overflow-y:auto;padding:1.25rem 1.5rem}
+.sp-foot{padding:1.5rem;border-top:1px solid var(--border);flex-shrink:0;background:white}
+
+/* CART */
+.empty-st{text-align:center;padding:3.5rem 0;color:var(--ink-muted)}
+.empty-st svg{width:42px;height:42px;margin:0 auto 1rem;display:block;opacity:.2}
+.empty-st p{font-size:14px}
+.ci{display:flex;gap:12px;padding:1rem 0;border-bottom:1px solid var(--border)}
+.ci:last-child{border-bottom:none}
+.ci-ico{width:50px;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden}
+.ci-ico.hq{background:var(--blue-dim)}
+.ci-ico.vendor{background:var(--surface);border:1px solid var(--border)}
+.ci-ico img{width:100%;height:100%;object-fit:cover}
+.ci-info{flex:1}
+.ci-name{font-size:13.5px;font-weight:600;color:var(--ink)}
+.ci-type{font-size:11.5px;color:var(--ink-muted);margin-top:1px}
+.ci-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.ci-price{font-size:14.5px;font-weight:700;color:var(--ink)}
+.ci-q{display:flex;align-items:center;gap:8px}
+.cqb{width:24px;height:24px;border:1px solid var(--border);border-radius:50%;background:white;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--ink);transition:.15s var(--ease)}
+.cqb:hover{background:var(--surface)}
+.cqn{font-size:13px;font-weight:700;min-width:18px;text-align:center}
+.rmb{font-size:12px;color:var(--ink-muted);background:none;border:none;cursor:pointer;padding:0;margin-left:4px}
+.rmb:hover{color:var(--red)}
+.sr{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink-soft);margin-bottom:6px}
+.st{display:flex;justify-content:space-between;font-size:17px;font-weight:700;color:var(--ink);padding-top:12px;margin-top:8px;border-top:1px solid var(--border)}
+.big-btn{width:100%;height:48px;background:var(--ink);color:white;border:none;border-radius:var(--rmd);font-family:var(--font);font-size:15px;font-weight:600;cursor:pointer;transition:.15s var(--ease);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:1rem}
+.big-btn:hover{background:var(--blue)}
+.big-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* SETTINGS */
+.sg{margin-bottom:1.5rem}
+.sl{font-size:11.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.5rem}
+.si{width:100%;height:40px;border:1px solid var(--border);border-radius:var(--rsm);padding:0 12px;font-family:var(--font);font-size:13.5px;color:var(--ink);outline:none;transition:.15s var(--ease)}
+.si:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,111,212,.1)}
+.sh{font-size:12px;color:var(--ink-muted);margin-top:6px;line-height:1.5}
+.sh a{color:var(--blue)}
+.sv-btn{background:var(--ink);color:white;border:none;border-radius:var(--rsm);padding:9px 18px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-top:.75rem}
+.sv-btn:hover{background:var(--blue)}
+.sdiv{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.legend{background:var(--surface);border-radius:var(--rmd);padding:1rem 1.25rem}
+.lr{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.lr:last-child{border-bottom:none}
+.ld{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ld.hq{background:var(--green)}
+.ld.vendor{background:var(--amber)}
+.li{font-size:13px;color:var(--ink-soft);line-height:1.5}
+
+/* CHECKOUT */
+.mo{display:none;position:fixed;inset:0;background:rgba(13,27,46,.55);z-index:300;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(3px)}
+.mo.on{display:flex}
+.mbox{background:white;border-radius:var(--rxl);width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(13,27,46,.2)}
+.m-head{padding:1.75rem 2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;position:sticky;top:0;background:white;z-index:1}
+.m-head-t{font-size:18px;font-weight:700;color:var(--ink)}
+.m-head-s{font-size:13px;color:var(--ink-muted);margin-top:3px}
+.m-body{padding:2rem}
+.flabel{font-size:11px;font-weight:700;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:1rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;border:1px solid var(--border);border-radius:var(--rsm);padding:9px 12px;font-family:var(--font);font-size:13.5px;color:var(--ink);background:white;outline:none;transition:.15s var(--ease)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,111,212,.1)}
+.fg textarea{resize:vertical;min-height:80px;line-height:1.5}
+.fg select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%238A94A6' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.fdiv{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.obox{background:var(--surface);border:1px solid var(--border);border-radius:var(--rmd);padding:1rem 1.25rem;margin-bottom:1.5rem}
+.oi{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);margin-bottom:6px}
+.ot{display:flex;justify-content:space-between;font-size:15px;font-weight:700;color:var(--ink);padding-top:10px;margin-top:10px;border-top:1px solid var(--border)}
+.sub-note{text-align:center;font-size:12px;color:var(--ink-muted);margin-top:10px}
+
+/* SUCCESS */
+.succ-box{background:white;border-radius:var(--rxl);width:100%;max-width:380px;padding:3rem 2.5rem;text-align:center;box-shadow:0 24px 80px rgba(13,27,46,.2)}
+.succ-ico{width:66px;height:66px;background:var(--green-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:26px;color:var(--green)}
+.succ-box h2{font-size:22px;font-weight:700;color:var(--ink);margin-bottom:.5rem}
+.succ-box p{font-size:14px;color:var(--ink-soft);line-height:1.7}
+.oid{display:inline-block;background:var(--blue-dim);color:var(--blue);font-size:13px;font-weight:700;padding:6px 16px;border-radius:100px;margin:1rem 0}
+.succ-back{background:var(--ink);color:white;border:none;border-radius:var(--rmd);padding:11px 28px;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;margin-top:1.5rem;transition:.15s var(--ease)}
+.succ-back:hover{background:var(--blue)}
+
+footer{border-top:1px solid var(--border);padding:2rem;text-align:center;font-size:13px;color:var(--ink-muted);background:white}
+@media(max-width:640px){
+  .nav-center{display:none}
+  .shop{padding:1.5rem 1rem 3rem}
+  .hero{padding:3.5rem 1.25rem 3rem}
+  .grid{grid-template-columns:1fr 1fr;gap:.9rem}
+  .frow{grid-template-columns:1fr}
+  .sp{width:100%}
+}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="#">
+      <div class="brand-icon">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M4 16L10 4L16 16" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.5 12H13.5" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">Alkira</div>
+        <div class="brand-sub">SWAG Shop</div>
+      </div>
+    </a>
+    <div class="nav-center">
+      <div class="srch">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Search products…" oninput="renderGrid()"/>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn" onclick="openPanel('settings')" title="Settings">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button class="cart-btn" onclick="openPanel('cart')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Cart <span class="cpill hide" id="cpill">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-chip"><span class="chip-dot"></span>Alkira Team Store</div>
+    <h1>Your Alkira gear,<br><em>delivered.</em></h1>
+    <p class="hero-sub">Browse HQ inventory or order from our vendors. No spreadsheets. No back-and-forth.</p>
+  </div>
+</div>
+
+<div class="shop">
+  <div class="filter-bar">
+    <div class="tabs">
+      <button class="tab on" id="tabAll" onclick="setTab('all')">All <span class="tn" id="nAll">–</span></button>
+      <button class="tab" id="tabHQ" onclick="setTab('hq')">In Stock · HQ <span class="tn" id="nHQ">–</span></button>
+      <button class="tab" id="tabVendor" onclick="setTab('vendor')">Vendor Order <span class="tn" id="nVendor">–</span></button>
+    </div>
+    <div class="sec-info">
+      <div class="sec-title" id="sTitle">All Items</div>
+      <div class="sec-desc" id="sDesc">Full Alkira merchandise collection</div>
+    </div>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>Alkira SWAG Shop &nbsp;·&nbsp; Questions? Contact your marketing team &nbsp;·&nbsp; All prices in USD</footer>
+
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+
+<!-- CART -->
+<div class="sp" id="cartPanel">
+  <div class="sp-head">
+    <div><div class="sp-head-t">Your Cart</div><div class="sp-head-s" id="cartSub">0 items</div></div>
+    <button class="xb" onclick="closePanel()">×</button>
+  </div>
+  <div class="sp-body" id="cartBody">
+    <div class="empty-st" id="cartEmpty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <p>Your cart is empty.<br>Add something!</p>
+    </div>
+  </div>
+  <div class="sp-foot">
+    <div class="sr"><span>Subtotal</span><span id="cSub">$0.00</span></div>
+    <div class="sr"><span>Shipping</span><span>At checkout</span></div>
+    <div class="st"><span>Total</span><span id="cTot">$0.00</span></div>
+    <button class="big-btn" id="chkBtn" onclick="openCheckout()" disabled>Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="sp" id="settingsPanel">
+  <div class="sp-head">
+    <div><div class="sp-head-t">Settings</div><div class="sp-head-s">Configure your shop</div></div>
+    <button class="xb" onclick="closePanel()">×</button>
+  </div>
+  <div class="sp-body">
+    <div class="sg">
+      <div class="sl">Slack Webhook URL</div>
+      <input class="si" type="text" id="whInput" placeholder="https://hooks.slack.com/services/…"/>
+      <div class="sh">Order notifications sent to Slack automatically. <a href="https://api.slack.com/messaging/webhooks" target="_blank">Get a webhook URL →</a></div>
+      <button class="sv-btn" onclick="saveWH()">Save Settings</button>
+    </div>
+    <hr class="sdiv"/>
+    <div class="sl">Legend</div>
+    <div class="legend">
+      <div class="lr"><div class="ld hq"></div><div class="li"><strong>In Stock · HQ</strong> — Ready to ship from San Jose. Fastest turnaround.</div></div>
+      <div class="lr"><div class="ld vendor"></div><div class="li"><strong>Vendor Order</strong> — Custom-produced by supplier. Allow 2–3 weeks.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="mo" id="chkOverlay">
+  <div class="mbox">
+    <div class="m-head">
+      <div><div class="m-head-t">Complete Your Order</div><div class="m-head-s">Your team will be notified via Slack</div></div>
+      <button class="xb" onclick="closeChk()">×</button>
+    </div>
+    <div class="m-body">
+      <div class="flabel">Your Info</div>
+      <div class="frow">
+        <div class="fg"><label>First Name *</label><input type="text" id="fFirst" placeholder="Jane"/></div>
+        <div class="fg"><label>Last Name *</label><input type="text" id="fLast" placeholder="Smith"/></div>
+      </div>
+      <div class="fg"><label>Email *</label><input type="email" id="fEmail" placeholder="jane@alkira.com"/></div>
+      <div class="frow">
+        <div class="fg"><label>Department</label>
+          <select id="fDept"><option value="">Select…</option><option>Sales</option><option>Marketing</option><option>Engineering</option><option>Product</option><option>Customer Success</option><option>Operations</option><option>HR / People</option><option>Finance</option><option>Executive</option><option>External / Guest</option></select>
+        </div>
+        <div class="fg"><label>Purpose</label>
+          <select id="fPurp"><option value="">Select…</option><option>Field Event</option><option>Customer Gift</option><option>New Hire Kit</option><option>Internal Use</option><option>Marketing Campaign</option><option>Other</option></select>
+        </div>
+      </div>
+      <hr class="fdiv"/>
+      <div class="flabel">Shipping Address</div>
+      <div class="fg"><label>Street Address *</label><input type="text" id="fAddr" placeholder="123 Main St, Suite 100"/></div>
+      <div class="frow">
+        <div class="fg"><label>City *</label><input type="text" id="fCity" placeholder="San Jose"/></div>
+        <div class="fg"><label>State *</label><input type="text" id="fSt" placeholder="CA"/></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>ZIP *</label><input type="text" id="fZip" placeholder="95101"/></div>
+        <div class="fg"><label>Country</label>
+          <select id="fCtry"><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Germany</option><option>France</option><option>Australia</option><option>India</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="fg"><label>Notes</label><textarea id="fNotes" placeholder="Sizes, colors, anything else the team should know…"></textarea></div>
+      <hr class="fdiv"/>
+      <div class="flabel">Order Summary</div>
+      <div class="obox" id="obox"></div>
+      <button class="big-btn" id="submitBtn" onclick="placeOrder()">
+        Place Order
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+      </button>
+      <div class="sub-note">A Slack notification will be sent to your team upon submission</div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="mo" id="succOverlay">
+  <div class="succ-box">
+    <div class="succ-ico">✓</div>
+    <h2>Order Placed!</h2>
+    <div class="oid" id="succId">Order #000000</div>
+    <p>Your order is confirmed. The Alkira team has been notified via Slack and will be in touch about shipping.</p>
+    <button class="succ-back" onclick="resetShop()">Continue Shopping</button>
+  </div>
+</div>
+
+<script>
+var PRODUCTS = [];
+var selectedSizes = {};
+var cart = {};
+var tab = 'all';
+var wh = localStorage.getItem('alk_wh') || '';
+
+if (wh) {
+  document.getElementById('whInput').value = wh;
+}
+
+function saveWH() {
+  wh = document.getElementById('whInput').value.trim();
+  localStorage.setItem('alk_wh', wh);
+  var b = document.querySelector('.sv-btn');
+  b.textContent = '✓ Saved!';
+  setTimeout(function() { b.textContent = 'Save Settings'; }, 2000);
+}
+
+function cartKey(id, size) {
+  return size ? (id + '__' + size) : String(id);
+}
+
+function renderGrid() {
+  var q = document.getElementById('searchInput').value.toLowerCase();
+  var g = document.getElementById('grid');
+
+  var list = PRODUCTS.filter(function(p) {
+    var matchTab = (tab === 'all' || p.type === tab);
+    var matchQ = !q || [p.name, p.category, p.description].some(function(s) {
+      return s && s.toLowerCase().indexOf(q) !== -1;
+    });
+    return matchTab && matchQ;
+  });
+
+  if (!list.length) {
+    g.innerHTML = '<div class="no-res"><p>🔍</p><p>No items match your search.</p></div>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var p = list[i];
+    var sizes = p.sizes ? p.sizes.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
+    var hasSizes = sizes.length > 0;
+    var selSize = selectedSizes[p.id] || null;
+    var key = cartKey(p.id, selSize);
+    var qty = cart[key] ? cart[key].qty : 0;
+
+    // Visual: image or emoji
+    var visual = '';
+    if (p.image_url) {
+      visual = '<img src="' + p.image_url + '" alt="' + p.name + '"/>';
+    } else {
+      visual = p.icon || '📦';
+    }
+
+    // Badge label
+    var badgeLabel = p.type === 'hq' ? 'In Stock · HQ' : 'Vendor Order';
+
+    // Size picker
+    var sizePicker = '';
+    if (hasSizes) {
+      sizePicker = '<div class="size-row"><div class="size-label">Select size</div>';
+      for (var s = 0; s < sizes.length; s++) {
+        var isSelected = selSize === sizes[s];
+        sizePicker += '<button class="size-chip' + (isSelected ? ' sel' : '') + '" onclick="pickSize(' + p.id + ',\'' + sizes[s] + '\')">' + sizes[s] + '</button>';
+      }
+      sizePicker += '</div>';
+    }
+
+    // Add / qty control
+    var ctrl = '';
+    if (qty === 0) {
+      var disabled = (hasSizes && !selSize) ? 'disabled' : '';
+      ctrl = '<button class="add-btn" onclick="addItem(' + p.id + ')" ' + disabled + '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>Add</button>';
+    } else {
+      ctrl = '<div class="qctrl"><button class="qb" onclick="chQ(\'' + key + '\',-1)">−</button><div class="qv">' + qty + '</div><button class="qb" onclick="chQ(\'' + key + '\',1)">+</button></div>';
+    }
+
+    html += '<div class="pc">';
+    html += '<div class="pc-vis ' + p.type + '">' + visual + '<span class="pc-badge ' + p.type + '"><span class="bdot"></span>' + badgeLabel + '</span></div>';
+    html += '<div class="pc-body">';
+    html += '<div class="pc-cat">' + p.category + '</div>';
+    html += '<div class="pc-name">' + p.name + '</div>';
+    html += '<div class="pc-desc">' + (p.description || '') + (p.type === 'vendor' ? '<div class="vn">⏱ Ships in 2–3 weeks</div>' : '') + '</div>';
+    html += sizePicker;
+    html += '<div class="pc-foot"><div class="pc-price">$' + p.price + '<span> USD</span></div>' + ctrl + '</div>';
+    html += '</div></div>';
+  }
+
+  g.innerHTML = html;
+  document.getElementById('nAll').textContent = PRODUCTS.length;
+  document.getElementById('nHQ').textContent = PRODUCTS.filter(function(p) { return p.type === 'hq'; }).length;
+  document.getElementById('nVendor').textContent = PRODUCTS.filter(function(p) { return p.type === 'vendor'; }).length;
+}
+
+function pickSize(productId, size) {
+  if (selectedSizes[productId] === size) {
+    selectedSizes[productId] = null;
+  } else {
+    selectedSizes[productId] = size;
+  }
+  renderGrid();
+}
+
+function setTab(t) {
+  tab = t;
+  ['All','HQ','Vendor'].forEach(function(k) {
+    document.getElementById('tab' + k).classList.remove('on');
+  });
+  var tabId = t === 'all' ? 'tabAll' : t === 'hq' ? 'tabHQ' : 'tabVendor';
+  document.getElementById(tabId).classList.add('on');
+  var info = {
+    all: ['All Items', 'Full Alkira merchandise collection'],
+    hq:  ['In Stock · HQ', 'Ready to ship from San Jose'],
+    vendor: ['Vendor Order', 'Custom items — allow 2–3 weeks']
+  };
+  document.getElementById('sTitle').textContent = info[t][0];
+  document.getElementById('sDesc').textContent  = info[t][1];
+  renderGrid();
+}
+
+function addItem(id) {
+  var p = null;
+  for (var i = 0; i < PRODUCTS.length; i++) {
+    if (PRODUCTS[i].id === id) { p = PRODUCTS[i]; break; }
+  }
+  if (!p) return;
+  var sizes = p.sizes ? p.sizes.split(',').map(function(s) { return s.trim(); }).filter(Boolean) : [];
+  var selSize = sizes.length ? (selectedSizes[id] || null) : null;
+  if (sizes.length && !selSize) return;
+  var key = cartKey(id, selSize);
+  if (!cart[key]) {
+    cart[key] = { id: p.id, name: p.name, price: p.price, type: p.type, icon: p.icon, image_url: p.image_url, qty: 0, selectedSize: selSize, cartKey: key };
+  }
+  cart[key].qty++;
+  syncCart();
+  renderGrid();
+}
+
+function chQ(key, d) {
+  if (!cart[key]) return;
+  cart[key].qty += d;
+  if (cart[key].qty <= 0) { delete cart[key]; }
+  syncCart();
+  renderGrid();
+}
+
+function syncCart() {
+  var items = Object.values(cart);
+  var count = items.reduce(function(s, i) { return s + i.qty; }, 0);
+  var sub   = items.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+  var pill  = document.getElementById('cpill');
+  pill.textContent = count;
+  pill.classList.toggle('hide', count === 0);
+  document.getElementById('cartSub').textContent = count + ' item' + (count !== 1 ? 's' : '');
+  document.getElementById('cSub').textContent = '$' + sub.toFixed(2);
+  document.getElementById('cTot').textContent = '$' + sub.toFixed(2);
+  document.getElementById('chkBtn').disabled = count === 0;
+  renderCartItems();
+}
+
+function renderCartItems() {
+  var body  = document.getElementById('cartBody');
+  var items = Object.values(cart);
+  body.querySelectorAll('.ci').forEach(function(e) { e.remove(); });
+  var empty = document.getElementById('cartEmpty');
+  if (!items.length) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  items.forEach(function(it) {
+    var el = document.createElement('div');
+    el.className = 'ci';
+    var thumb = it.image_url ? '<img src="' + it.image_url + '" alt="' + it.name + '"/>' : (it.icon || '📦');
+    var szLabel = it.selectedSize ? ' <span style="font-size:11px;color:var(--blue);font-weight:700">(' + it.selectedSize + ')</span>' : '';
+    el.innerHTML =
+      '<div class="ci-ico ' + it.type + '">' + thumb + '</div>' +
+      '<div class="ci-info">' +
+        '<div class="ci-name">' + it.name + szLabel + '</div>' +
+        '<div class="ci-type">' + (it.type === 'hq' ? 'In Stock · HQ' : 'Vendor · 2–3 weeks') + '</div>' +
+        '<div class="ci-row">' +
+          '<div class="ci-q">' +
+            '<button class="cqb" onclick="chQ(\'' + it.cartKey + '\',-1)">−</button>' +
+            '<span class="cqn">' + it.qty + '</span>' +
+            '<button class="cqb" onclick="chQ(\'' + it.cartKey + '\',1)">+</button>' +
+            '<button class="rmb" onclick="removeItem(\'' + it.cartKey + '\')">Remove</button>' +
+          '</div>' +
+          '<div class="ci-price">$' + (it.price * it.qty).toFixed(2) + '</div>' +
+        '</div>' +
+      '</div>';
+    body.appendChild(el);
+  });
+}
+
+function removeItem(key) { delete cart[key]; syncCart(); renderGrid(); }
+
+var activePanel = null;
+function openPanel(which) {
+  closePanel(false);
+  document.getElementById(which + 'Panel').classList.add('on');
+  document.getElementById('overlay').classList.add('on');
+  activePanel = which;
+}
+function closePanel(a) {
+  ['cart','settings'].forEach(function(p) { document.getElementById(p + 'Panel').classList.remove('on'); });
+  document.getElementById('overlay').classList.remove('on');
+  activePanel = null;
+}
+
+function openCheckout() {
+  closePanel(false);
+  var items = Object.values(cart);
+  var sub   = items.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+  var html  = '';
+  items.forEach(function(i) {
+    var sz = i.selectedSize ? ' (' + i.selectedSize + ')' : '';
+    html += '<div class="oi"><span>' + (i.icon || '📦') + ' ' + i.name + sz + ' × ' + i.qty + '</span><span>$' + (i.price * i.qty).toFixed(2) + '</span></div>';
+  });
+  html += '<div class="ot"><span>Total</span><span>$' + sub.toFixed(2) + '</span></div>';
+  document.getElementById('obox').innerHTML = html;
+  document.getElementById('chkOverlay').classList.add('on');
+}
+function closeChk() { document.getElementById('chkOverlay').classList.remove('on'); }
+document.getElementById('chkOverlay').addEventListener('click', function(e) { if (e.target === this) closeChk(); });
+
+async function placeOrder() {
+  function v(id) { return document.getElementById(id).value.trim(); }
+  if (!v('fFirst') || !v('fLast') || !v('fEmail') || !v('fAddr') || !v('fCity') || !v('fSt') || !v('fZip')) {
+    alert('Please fill in all required fields (*).'); return;
+  }
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+
+  var oid   = 'ALK-' + Date.now().toString().slice(-6);
+  var items = Object.values(cart);
+  var sub   = items.reduce(function(s, i) { return s + i.price * i.qty; }, 0);
+  var addr  = v('fAddr') + ', ' + v('fCity') + ', ' + v('fSt') + ' ' + v('fZip') + ', ' + v('fCtry');
+
+  var orderItems = items.map(function(i) {
+    var name = i.name + (i.selectedSize ? ' (' + i.selectedSize + ')' : '');
+    return { name: name, qty: i.qty, price: i.price };
+  });
+
+  try {
+    await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_ref: oid, first_name: v('fFirst'), last_name: v('fLast'),
+        email: v('fEmail'), department: v('fDept'), purpose: v('fPurp'),
+        address: addr, total: sub, notes: v('fNotes'), items: orderItems
+      })
+    });
+  } catch(e) { console.warn('DB save:', e); }
+
+  if (wh.indexOf('https://hooks.slack.com') === 0) {
+    var slackMsg = {
+      text: '🛍 New SWAG Order — ' + oid,
+      blocks: [
+        { type: 'header', text: { type: 'plain_text', text: '🛍 New Order: ' + oid }},
+        { type: 'section', fields: [
+          { type: 'mrkdwn', text: '*Name:*\n' + v('fFirst') + ' ' + v('fLast') },
+          { type: 'mrkdwn', text: '*Email:*\n' + v('fEmail') },
+          { type: 'mrkdwn', text: '*Dept:*\n' + (v('fDept') || '—') },
+          { type: 'mrkdwn', text: '*Purpose:*\n' + (v('fPurp') || '—') }
+        ]},
+        { type: 'section', text: { type: 'mrkdwn', text: '*Items:*\n' + orderItems.map(function(i) { return '• ' + i.name + ' × ' + i.qty + ' — $' + (i.price * i.qty).toFixed(2); }).join('\n') }},
+        { type: 'section', fields: [
+          { type: 'mrkdwn', text: '*Total:*\n$' + sub.toFixed(2) + ' USD' },
+          { type: 'mrkdwn', text: '*Ship To:*\n' + addr }
+        ]},
+        { type: 'context', elements: [{ type: 'mrkdwn', text: 'Alkira SWAG Shop · ' + new Date().toLocaleString() }]}
+      ]
+    };
+    if (v('fNotes')) {
+      slackMsg.blocks.splice(4, 0, { type: 'section', text: { type: 'mrkdwn', text: '*Notes:*\n' + v('fNotes') }});
+    }
+    try { await fetch(wh, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(slackMsg) }); }
+    catch(e) { console.warn('Slack:', e); }
+  }
+
+  cart = {}; syncCart(); renderGrid(); closeChk();
+  document.getElementById('succId').textContent = 'Order ' + oid;
+  document.getElementById('succOverlay').classList.add('on');
+  btn.disabled = false;
+  btn.innerHTML = 'Place Order <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>';
+}
+
+function resetShop() {
+  document.getElementById('succOverlay').classList.remove('on');
+  ['fFirst','fLast','fEmail','fAddr','fCity','fSt','fZip','fNotes'].forEach(function(id) { document.getElementById(id).value = ''; });
+  ['fDept','fPurp'].forEach(function(id) { document.getElementById(id).value = ''; });
+}
+
+async function loadProducts() {
+  document.getElementById('grid').innerHTML = '<div class="no-res"><p>⏳</p><p>Loading products…</p></div>';
+  try {
+    var res = await fetch('/api/products');
+    PRODUCTS = await res.json();
+    renderGrid();
+  } catch(e) {
+    document.getElementById('grid').innerHTML = '<div class="no-res"><p>⚠️</p><p>Could not load products. Is Flask running?</p></div>';
+    console.error('Failed to load products:', e);
+  }
+}
+
+loadProducts();
+</script>
+</body>
+</html>
