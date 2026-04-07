@@ -32,7 +32,7 @@ Total: {order_data.get("total")}
     msg["To"] = "your_email@alkira.net"  # change later to team email
 
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=5)
         server.starttls()
         server.login("luis.moncada@alkira.net", "yvka qbvj ljch wnoi")
         server.send_message(msg)
