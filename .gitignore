@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+node_modules/
+swag.db
+.DS_Store

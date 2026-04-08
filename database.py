@@ -1,31 +1,35 @@
-import sqlite3
+import os
+import psycopg2
+import psycopg2.extras
 
-DB = "swag.db"
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(DATABASE_URL)
     return conn
 
 def init_db():
     conn = get_db()
+    cur = conn.cursor()
 
-    # Create base tables if they don't exist yet
-    conn.execute("""
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             type TEXT NOT NULL,
             category TEXT NOT NULL,
             name TEXT NOT NULL,
             description TEXT,
             price REAL NOT NULL,
             icon TEXT,
-            active INTEGER DEFAULT 1
+            active INTEGER DEFAULT 1,
+            image_url TEXT,
+            sizes TEXT
         )
     """)
-    conn.execute("""
+
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS orders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             order_ref TEXT,
             first_name TEXT,
             last_name TEXT,
@@ -36,29 +40,22 @@ def init_db():
             items TEXT,
             total REAL,
             notes TEXT,
+            status TEXT DEFAULT 'pending',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
 
-    # ── Migrations: safely add new columns to existing databases ──
-    prod_cols = [row[1] for row in conn.execute("PRAGMA table_info(products)").fetchall()]
-    if 'image_url' not in prod_cols:
-        conn.execute("ALTER TABLE products ADD COLUMN image_url TEXT")
-    if 'sizes' not in prod_cols:
-        conn.execute("ALTER TABLE products ADD COLUMN sizes TEXT")
-
-    order_cols = [row[1] for row in conn.execute("PRAGMA table_info(orders)").fetchall()]
-    if 'status' not in order_cols:
-        conn.execute("ALTER TABLE orders ADD COLUMN status TEXT DEFAULT 'pending'")
-
     conn.commit()
+    cur.close()
     conn.close()
 
 def seed_products():
-    """Run once to load your existing products into the DB."""
     conn = get_db()
-    existing = conn.execute("SELECT COUNT(*) FROM products").fetchone()[0]
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*) FROM products")
+    existing = cur.fetchone()[0]
     if existing > 0:
+        cur.close()
         conn.close()
         return
 
@@ -76,9 +73,10 @@ def seed_products():
         ('vendor', 'Accessories', 'Tech Organizer',           'Cable and gadget travel bag with Alkira branding.',                          65,  '🎒'),
         ('vendor', 'Accessories', 'Branded Umbrella',         'Auto-open windproof umbrella with full-panel Alkira print.',                 30,  '☂️'),
     ]
-    conn.executemany(
-        "INSERT INTO products (type, category, name, description, price, icon) VALUES (?,?,?,?,?,?)",
+    cur.executemany(
+        "INSERT INTO products (type, category, name, description, price, icon) VALUES (%s,%s,%s,%s,%s,%s)",
         products
     )
     conn.commit()
+    cur.close()
     conn.close()
