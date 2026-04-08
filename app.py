@@ -1,7 +1,7 @@
-import json
+import resend
+resend.api_key = os.environ.get("re_KJCqmhWT_AkQT9pprww9kpCE2wWPru7mX")
 import os
-import smtplib
-from email.mime.text import MIMEText
+
 from flask import Flask, render_template, jsonify, request
 from database import get_db, init_db, seed_products
 
@@ -14,32 +14,27 @@ if __name__ != "__main__":
 
 # ── EMAIL FUNCTION ─────────────────────────────────────────────
 def send_order_email(order_data):
-    msg = MIMEText(f"""
-New Alkira Swag Order 🚀
-
-Name: {order_data.get("first_name")} {order_data.get("last_name")}
-Email: {order_data.get("email")}
-Department: {order_data.get("department")}
-
-Items:
-{order_data.get("items")}
-
-Total: {order_data.get("total")}
-""")
-
-    msg["Subject"] = "New Swag Order"
-    msg["From"] = "luis.moncada@alkira.net"
-    msg["To"] = "your_email@alkira.net"  # change later to team email
-
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=5)
-        server.starttls()
-        server.login("luis.moncada@alkira.net", "yvka qbvj ljch wnoi")
-        server.send_message(msg)
-        server.quit()
-        print("Email sent successfully")
+        response = resend.Emails.send({
+            "from": "<onboarding@resend.dev>",
+            "to": ["luis.moncada@alkira.net"],  # <-- PUT YOUR EMAIL HERE
+            "subject": "🛒 New Swag Order",
+            "html": f"""
+                <h2>New Alkira Swag Order 🚀</h2>
+
+                <p><strong>Name:</strong> {order_data.get("first_name")} {order_data.get("last_name")}</p>
+                <p><strong>Email:</strong> {order_data.get("email")}</p>
+                <p><strong>Department:</strong> {order_data.get("department")}</p>
+
+                <p><strong>Items:</strong> {order_data.get("items")}</p>
+                <p><strong>Total:</strong> {order_data.get("total")}</p>
+            """
+        })
+
+        print("✅ Email sent:", response)
+
     except Exception as e:
-        print("Email failed:", e)
+        print("❌ Email failed:", e)
 
 # ── Public shop ───────────────────────────────────────────────
 @app.route("/")
