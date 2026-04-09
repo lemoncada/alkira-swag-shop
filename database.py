@@ -2,10 +2,16 @@ import os
 import psycopg2
 import psycopg2.extras
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
 def get_db():
-    conn = psycopg2.connect(DATABASE_URL)
+    database_url = os.environ.get("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError(
+            "[DB] FATAL: DATABASE_URL environment variable is not set. "
+            "Set it in Render → Environment → Environment Variables."
+        )
+    url = database_url.replace("postgres://", "postgresql://", 1)
+    print(f"[DB] Connecting to: {url[:40]}...")
+    conn = psycopg2.connect(url)
     return conn
 
 def init_db():

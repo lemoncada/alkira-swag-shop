@@ -1,21 +1,44 @@
 import os
 import json
+import time
 import resend
-
-resend.api_key = os.environ.get("RESEND_API_KEY")
 
 from flask import Flask, render_template, jsonify, request
 from database import get_db, init_db, seed_products
 
 app = Flask(__name__)
 
-# Initialize DB (only in production)
+# ── ENV VAR VALIDATION ────────────────────────────────────────
+_resend_api_key = os.environ.get("RESEND_API_KEY")
+if _resend_api_key:
+    resend.api_key = _resend_api_key
+    print("[EMAIL] RESEND_API_KEY loaded.")
+else:
+    print("[EMAIL] WARNING: RESEND_API_KEY is not set. Emails will be skipped.")
+
+if not os.environ.get("DATABASE_URL"):
+    print("[DB] WARNING: DATABASE_URL is not set. Database calls will fail.")
+
+# Initialize DB with retries (only in production/gunicorn)
 if __name__ != "__main__":
-    init_db()
-    seed_products()
+    for attempt in range(5):
+        try:
+            init_db()
+            seed_products()
+            print("[DB] Initialized successfully.")
+            break
+        except Exception as e:
+            print(f"[DB] Attempt {attempt + 1}/5 failed: {e}")
+            if attempt < 4:
+                time.sleep(3)
+            else:
+                raise
 
 # ── EMAIL FUNCTION ─────────────────────────────────────────────
 def send_order_email(order_data):
+    if not os.environ.get("RESEND_API_KEY"):
+        print("[EMAIL] Skipping email — RESEND_API_KEY is not configured.")
+        return
     try:
         response = resend.Emails.send({
             "from": "Alkira Swag <onboarding@resend.dev>",
