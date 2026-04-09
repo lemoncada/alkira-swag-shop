@@ -40,19 +40,77 @@ def send_order_email(order_data):
         print("[EMAIL] Skipping email — RESEND_API_KEY is not configured.")
         return
     try:
+        from datetime import datetime
+        items = order_data.get("items", [])
+        if isinstance(items, str):
+            items = json.loads(items)
+
+        items_rows = "".join(
+            f"""<tr>
+                  <td style="padding:8px 12px;border-bottom:1px solid #eee;">{item.get('name','—')}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">{item.get('qty', item.get('quantity', 1))}</td>
+                  <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">${item.get('price', 0):.2f}</td>
+                </tr>"""
+            for item in items
+        )
+
+        order_date = datetime.utcnow().strftime("%B %d, %Y at %I:%M %p UTC")
+        total = order_data.get("total", 0)
+        ref = order_data.get("order_ref", "N/A")
+
         response = resend.Emails.send({
             "from": "Alkira Swag <onboarding@resend.dev>",
             "to": ["luis.moncada@alkira.net"],
-            "subject": "🛒 New Swag Order",
+            "subject": f"🛒 New Swag Order — {order_data.get('first_name')} {order_data.get('last_name')} ({order_data.get('department')})",
             "html": f"""
-                <h2>New Alkira Swag Order 🚀</h2>
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#222;">
 
-                <p><strong>Name:</strong> {order_data.get("first_name")} {order_data.get("last_name")}</p>
-                <p><strong>Email:</strong> {order_data.get("email")}</p>
-                <p><strong>Department:</strong> {order_data.get("department")}</p>
+              <div style="background:#1a1a2e;padding:24px 32px;border-radius:8px 8px 0 0;">
+                <h1 style="color:#fff;margin:0;font-size:22px;">🛒 New Swag Order</h1>
+                <p style="color:#aaa;margin:4px 0 0;">Order Ref: <strong style="color:#fff;">{ref}</strong> &nbsp;|&nbsp; {order_date}</p>
+              </div>
 
-                <p><strong>Items:</strong> {order_data.get("items")}</p>
-                <p><strong>Total:</strong> {order_data.get("total")}</p>
+              <div style="background:#f9f9f9;padding:24px 32px;">
+
+                <h3 style="margin:0 0 12px;border-bottom:2px solid #1a1a2e;padding-bottom:6px;">👤 Customer Details</h3>
+                <table style="width:100%;border-collapse:collapse;font-size:15px;">
+                  <tr><td style="padding:5px 0;color:#555;width:140px;">Name</td><td><strong>{order_data.get('first_name')} {order_data.get('last_name')}</strong></td></tr>
+                  <tr><td style="padding:5px 0;color:#555;">Email</td><td>{order_data.get('email')}</td></tr>
+                  <tr><td style="padding:5px 0;color:#555;">Department</td><td>{order_data.get('department')}</td></tr>
+                  <tr><td style="padding:5px 0;color:#555;">Purpose</td><td>{order_data.get('purpose') or '—'}</td></tr>
+                </table>
+
+                <h3 style="margin:24px 0 12px;border-bottom:2px solid #1a1a2e;padding-bottom:6px;">📦 Ship To</h3>
+                <p style="margin:0;font-size:15px;line-height:1.6;">{(order_data.get('address') or '—').replace(chr(10), '<br>')}</p>
+
+                <h3 style="margin:24px 0 12px;border-bottom:2px solid #1a1a2e;padding-bottom:6px;">🧾 Items Ordered</h3>
+                <table style="width:100%;border-collapse:collapse;font-size:15px;">
+                  <thead>
+                    <tr style="background:#1a1a2e;color:#fff;">
+                      <th style="padding:8px 12px;text-align:left;">Item</th>
+                      <th style="padding:8px 12px;text-align:center;">Qty</th>
+                      <th style="padding:8px 12px;text-align:right;">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>{items_rows}</tbody>
+                  <tfoot>
+                    <tr style="background:#eee;">
+                      <td colspan="2" style="padding:10px 12px;font-weight:bold;text-align:right;">Total</td>
+                      <td style="padding:10px 12px;font-weight:bold;text-align:right;">${total:.2f}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+
+                {"<h3 style='margin:24px 0 12px;border-bottom:2px solid #1a1a2e;padding-bottom:6px;'>📝 Notes</h3><p style='margin:0;font-size:15px;'>" + order_data.get('notes') + "</p>" if order_data.get('notes') else ""}
+
+              </div>
+
+              <div style="background:#1a1a2e;padding:18px 32px;border-radius:0 0 8px 8px;text-align:center;">
+                <p style="color:#fff;margin:0;font-size:14px;">✅ This is a verified order from the <strong>Alkira Swag Shop</strong></p>
+                <p style="color:#aaa;margin:6px 0 0;font-size:12px;">Cheers, The Alkira Swag System 🎉 &nbsp;|&nbsp; alkira-swag-shop.onrender.com</p>
+              </div>
+
+            </div>
             """
         })
         print("✅ Email sent:", response)
