@@ -40,7 +40,7 @@ def send_order_email(order_data):
         print("[EMAIL] Skipping email — RESEND_API_KEY is not configured.")
         return
     try:
-        from datetime import datetime
+        from datetime import datetime, timezone
         items = order_data.get("items", [])
         if isinstance(items, str):
             items = json.loads(items)
@@ -54,7 +54,7 @@ def send_order_email(order_data):
             for item in items
         )
 
-        order_date = datetime.utcnow().strftime("%B %d, %Y at %I:%M %p UTC")
+        order_date = datetime.now(timezone.utc).strftime("%B %d, %Y at %I:%M %p UTC")
         total = order_data.get("total", 0)
         ref = order_data.get("order_ref", "N/A")
 
